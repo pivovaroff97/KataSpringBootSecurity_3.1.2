@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+  <form th:method="POST" th:action="@{/admin/users}" th:object="${user}">
+    <label for="name">Enter name: </label>
+    <input type="text" th:field="*{name}" id="name"/>
+    <br/>
+    <label for="lastname">Enter lastname: </label>
+    <input type="text" th:field="*{lastname}" id="lastname"/>
+    <br/>
+    <label for="username">Enter username: </label>
+    <input type="text" th:field="*{username}" id="username"/>
+    <br/>
+    <label for="password">Enter password: </label>
+    <input type="text" th:field="*{password}" id="password"/>
+    <br/>
+    <label for="dropDownRoleList">Choose roles: </label>
+    <select multiple size="${#arrays.length(roles)}" id="dropDownRoleList" name="roleIds">
+      <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+    </select>
+    <br><br>
+    <input type="submit" value="Save"/>
+  </form>
+  <br><br>
+  <table th:if="${not #lists.isEmpty(users)}">
+    <thead>
+      <tr>
+        <th> id </th>
+        <th> name </th>
+        <th> lastname </th>
+        <th> username </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr th:each="us : ${users}">
+        <td><span th:text="${us.id}"> id </span></td>
+        <td><span th:text="${us.name}"> name </span></td>
+        <td><span th:text="${us.lastname}"> lastname </span></td>
+        <td><span th:text="${us.username}"> username </span></td>
+        <td>
+          <a th:href="@{/admin/users/edit/{id}(id=${us.id})}">Edit</a>
+        </td>
+        <td>
+          <form th:method="DELETE" th:action="@{/admin/users/delete/{id}(id=${us.id})}">
+            <input type="submit" value="Delete"/>
+          </form>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div th:replace="authentication :: content"></div>
+</body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form th:method="POST" th:action="@{/admin/users/update}" th:object="${user}">
+    <label for="name">name: </label>
+    <input type="text" th:field="*{name}" id="name" th:placeholder="${user.name}"/>
+    <br/>
+    <label for="lastname">lastname: </label>
+    <input type="text" th:field="*{lastname}" id="lastname" th:placeholder="${user.lastname}"/>
+    <br/>
+    <label for="username">username: </label>
+    <input type="text" th:field="*{username}" id="username" th:placeholder="${user.username}"/>
+    <br/>
+    <input type="hidden" th:field="*{id}" id="id">
+    <input type="submit" value="Update"/>
+</form>
+<div th:replace="authentication :: content"></div>
+</body>
+</html>
