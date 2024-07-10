@@ -32,16 +32,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getUserByUsername(String username) {
-        return userDAO.findByUsername(username).orElseThrow();
-    }
-
-    @Override
     @Transactional
     public User saveUser(User user) {
-        if (userDAO.findByUsername(user.getUsername()).isPresent()) {
-            return null;
-        }
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userDAO.save(user);
     }
@@ -50,10 +42,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateUser(User user) {
         User us = userDAO.findById(user.getId()).orElseThrow();
-        if (!user.getUsername().equals(us.getUsername())
-                && userDAO.findByUsername(user.getUsername()).isPresent()) {
-            return null;
-        }
         us.setName(user.getName());
         us.setLastname(user.getLastname());
         us.setUsername(user.getUsername());
