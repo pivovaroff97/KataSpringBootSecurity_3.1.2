@@ -39,7 +39,7 @@ public class SpringBootSecurityDemoApplication {
 				.lastname("adminov")
 				.username("admin")
 				.password(passwordEncoder.encode("admin"))
-				.roles(Collections.singletonList(admin)).build()
+				.roles(Collections.singleton(admin)).build()
 		);
 	}
 }
