@@ -3,25 +3,24 @@ package ru.kata.spring.boot_security.demo.configs;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.kata.spring.boot_security.demo.service.CustomUserDetailsService;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private final SuccessUserHandler successUserHandler;
-    private final CustomUserDetailsService userDetailsService;
+    private final UserDetailsService userDetailsService;
 
     @Autowired
-    public WebSecurityConfig(SuccessUserHandler successUserHandler, CustomUserDetailsService userService) {
+    public WebSecurityConfig(SuccessUserHandler successUserHandler, UserDetailsService userService) {
         this.successUserHandler = successUserHandler;
         this.userDetailsService = userService;
     }
@@ -44,15 +43,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/index").permitAll()
                 .antMatchers("/admin/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/**").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.POST, "/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasAnyRole("ADMIN", "USER")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().successHandler(successUserHandler)
-                .permitAll()
+                .formLogin()
+                    .usernameParameter("Email address")
+                    .successHandler(successUserHandler)
+                    .permitAll()
                 .and()
-                .logout()
-                .permitAll();
+                .logout().permitAll();
     }
 }
