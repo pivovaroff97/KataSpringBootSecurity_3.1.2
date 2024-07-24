@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.HashSet;
 
 @Controller
-@RequestMapping("/admin/users")
+@RequestMapping("/admin")
 public class AdminUserController {
 
     private final UserService userService;
@@ -30,13 +30,7 @@ public class AdminUserController {
     public String getUsers(Model model, @ModelAttribute User user) {
         model.addAttribute("users", userService.getUsers());
         model.addAttribute("roles", roleService.getRoles());
-        return "admin/userTable";
-    }
-
-    @GetMapping("/edit/{id}")
-    public String editUser(Model model, @PathVariable Long id) {
-        model.addAttribute("user", userService.getUserById(id));
-        return "admin/editUser";
+        return "admin/admin";
     }
 
     @PostMapping
@@ -46,19 +40,17 @@ public class AdminUserController {
         } else {
             user.setRoles(new HashSet<>(roleService.getAllRoleByIds(roleIds)));
         }
-        userService.saveUser(user);
-        return "redirect:/admin/users";
-    }
-
-    @PostMapping("/update")
-    public String updateUser(User user) {
-        userService.updateUser(user);
-        return "redirect:/admin/users";
+        if (user.getId() != null) {
+            userService.updateUser(user);
+        } else {
+            userService.saveUser(user);
+        }
+        return "redirect:/admin";
     }
 
     @PostMapping("/delete/{id}")
     public String deleteUser(@PathVariable Long id) {
         userService.deleteUserById(id);
-        return "redirect:/admin/users";
+        return "redirect:/admin";
     }
 }

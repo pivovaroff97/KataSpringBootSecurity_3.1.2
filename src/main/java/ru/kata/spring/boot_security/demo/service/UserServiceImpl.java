@@ -44,7 +44,8 @@ public class UserServiceImpl implements UserService {
         User us = userDAO.findById(user.getId()).orElseThrow();
         us.setName(user.getName());
         us.setLastname(user.getLastname());
-        us.setUsername(user.getUsername());
+        us.setAge(user.getAge());
+        us.setRoles(user.getRoles());
         return us;
     }
 

@@ -1,0 +1,16 @@
+label {
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+.modal-body input {
+    margin-bottom: 0.5rem;
+}
+
+span.roles {
+    margin-right: 5px;
+}
+
+.form-select {
+    display: inline-grid;
+}

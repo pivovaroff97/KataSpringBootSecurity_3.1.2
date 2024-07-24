@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>User page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-light">
+<header class="d-flex justify-content-between p-3 bg-dark text-white">
+    <div th:replace="fragments/header :: content">username with roles</div>
+    <div th:replace="fragments/authentication :: content">Logout</div>
+</header>
+<div class="container-fluid">
+    <div class="row">
+        <div th:replace="fragments/navSidebar :: content">Navigation</div>
+        <div class="col-9 px-md-4">
+            <h1 class="pt-3 pb-3">User information page</h1>
+            <h5 class="col border ps-3 py-2 mb-0">About user</h5>
+            <div class="col bg-white border border-top-0 rounded-bottom p-3">
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th> ID </th>
+                        <th> First Name </th>
+                        <th> Last Name </th>
+                        <th> Age </th>
+                        <th> Email </th>
+                        <th> Role </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span th:text="${#authentication.principal.id}"> id </span></td>
+                            <td><span th:text="${#authentication.principal.name}"> name </span></td>
+                            <td><span th:text="${#authentication.principal.lastname}"> lastname </span></td>
+                            <td><span th:text="${#authentication.principal.age}"> age </span></td>
+                            <td><span th:text="${#authentication.principal.username}"> username </span></td>
+                            <td>
+                                <span class="roles" th:each="role: ${#authentication.principal.roles}"
+                                      th:if="${role.name.startsWith('ROLE_')}"
+                                      th:text="${role.name.replaceFirst('ROLE_', '')}">role name</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

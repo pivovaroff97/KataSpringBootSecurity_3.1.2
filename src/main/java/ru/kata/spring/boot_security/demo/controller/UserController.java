@@ -10,6 +10,6 @@ public class UserController {
 
     @GetMapping
     public String getUserInfo() {
-        return "user";
+        return "user/user";
     }
 }

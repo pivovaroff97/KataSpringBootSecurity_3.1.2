@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div th:fragment="content" class="col bg-white border border-top-0 rounded-bottom p-3">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th> ID </th>
+            <th> First Name </th>
+            <th> Last Name </th>
+            <th> Age </th>
+            <th> Email </th>
+            <th> Role </th>
+            <th> Edit </th>
+            <th> Delete </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="us : ${users}">
+            <td><span th:text="${us.id}"> id </span></td>
+            <td><span th:text="${us.name}"> name </span></td>
+            <td><span th:text="${us.lastname}"> lastname </span></td>
+            <td><span th:text="${us.age}"> age </span></td>
+            <td><span th:text="${us.username}"> username </span></td>
+            <td>
+                <span class="roles" th:each="role: ${us.roles}" th:if="${role.name.startsWith('ROLE_')}"
+                      th:text="${role.name.replaceFirst('ROLE_', '')}">role name</span>
+            </td>
+            <td>
+              <button type="button" class="btn btn-info btn-edit" data-toggle="modal"
+                      data-target="#editUserModal" th:data-user-id="${us.id}"
+                      th:data-user-name="${us.name}" th:data-user-lastname="${us.lastname}"
+                      th:data-user-username="${us.username}" th:data-user-age="${us.age}" th:data-user-roles="${us.roles}">
+                Edit
+              </button>
+            </td>
+            <td>
+              <button type="button" class="btn btn-danger btn-delete" data-toggle="modal"
+                      data-target="#deleteUserModal" th:data-user-id="${us.id}"
+                      th:data-user-name="${us.name}" th:data-user-lastname="${us.lastname}"
+                      th:data-user-username="${us.username}" th:data-user-age="${us.age}" th:data-user-roles="${us.roles}">
+                Delete
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+  <script>
+    $('.btn-edit').click(function () {
+        var $modal = $('#editUserModal')
+        var $btn = $(this);
+        $('#idE').val($btn.attr('data-user-id'));
+        $('#usernameE').val($btn.attr('data-user-username'));
+        $('#nameE').val($btn.attr('data-user-name'));
+        $('#lastnameE').val($btn.attr('data-user-lastname'));
+        $('#ageE').val($btn.attr('data-user-age'));
+        const userRoles = Array.from($btn.attr('data-user-roles').matchAll(/id=\d+/g)).map(x => x[0].replace('id=', ''));
+        var allRoles = $('#editUserModal select option').toArray();
+        for (const r of allRoles) {
+            if (userRoles.includes(r.id)) {
+                $('#' + r.id).attr('selected', true);
+            }
+        }
+    });
+  </script>
+
+  <!-- Модальное окно edit user -->
+  <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModal">Edit user</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="col-6 mx-auto text-center">
+                <form id="editForm" th:method="POST" th:action="@{/admin}" th:object="${user}">
+                    <label for="idE">ID</label>
+                    <input class="form-control" type="text" th:field="*{id}" id="idE" readonly>
+                    <label for="nameE">First name</label>
+                    <input class="form-control" type="text" th:field="*{name}" id="nameE"/>
+                    <label for="lastnameE">Last name</label>
+                    <input class="form-control" type="text" th:field="*{lastname}" id="lastnameE"/>
+                    <label for="ageE">Age</label>
+                    <input class="form-control" type="text" th:field="*{age}" id="ageE"/>
+                    <label for="usernameE">Email</label>
+                    <input class="form-control" type="text" th:field="*{username}" id="usernameE"/>
+                    <label for="passwordE">Password</label>
+                    <input class="form-control" type="text" th:field="*{password}" id="passwordE" disabled/>
+                    <label for="dropDownRoleList">Role</label>
+                    <select class="custom-select" multiple size="${#arrays.length(roles)}" id="dropDownRoleList" name="roleIds">
+                        <option th:id="${role.id}" th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                    </select>
+                </form>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            <button type="submit" form="editForm" class="btn btn-info">Edit</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    $('.btn-delete').click(function () {
+        var $modal = $('#deleteUserModal')
+        var $btn = $(this);
+        $('#deleteForm').attr('action', '/admin/delete/' + $btn.attr('data-user-id'));
+        $('#idD').val($btn.attr('data-user-id'));
+        $('#usernameD').val($btn.attr('data-user-username'));
+        $('#nameD').val($btn.attr('data-user-name'));
+        $('#lastnameD').val($btn.attr('data-user-lastname'));
+        $('#ageD').val($btn.attr('data-user-age'));
+        var roles = $btn.attr('data-user-roles');
+        for (const r of roles) {
+          $("#" + r.name).attr('selected', true);
+        }
+    });
+  </script>
+
+  <!-- Модальное окно delete user -->
+  <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModal">Delete user</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="col-6 mx-auto text-center">
+                  <form id="deleteForm" th:method="POST">
+                      <label for="idD">ID</label>
+                      <input type="text" id="idD" disabled>
+                      <label for="nameD">First name</label>
+                      <input type="text" id="nameD" disabled/>
+                      <label for="lastnameD">Last name</label>
+                      <input type="text" id="lastnameD" disabled/>
+                      <label for="ageD">Age</label>
+                      <input type="text" id="ageD" disabled/>
+                      <label for="usernameD">Email</label>
+                      <input type="text" id="usernameD" disabled/>
+                      <label for="dropDownRoleListD">Role</label>
+                      <select class="custom-select" multiple size="${#arrays.length(roles)}" id="dropDownRoleListD" disabled>
+                        <option id="${role.name}" th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                      </select>
+                  </form>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            <button type="submit" form="deleteForm" class="btn btn-danger">Delete</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

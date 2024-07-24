@@ -23,6 +23,7 @@ public class User implements UserDetails {
     private Long id;
     private String name;
     private String lastname;
+    private Integer age;
 
     @Column(unique = true)
     private String username;

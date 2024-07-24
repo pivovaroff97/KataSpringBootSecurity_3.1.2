@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+  <div th:fragment="content" class="col-2 bg-white pt-3 pl-0 pr-0">
+      <nav class="d-grid nav nav-pills flex-column px-0 pt-2 bg-white">
+          <div class="position-sticky" style="height: 100vh; overflow-x: hidden;" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+              <a class="nav-link" role="tab"
+                 th:each="role, iter: ${#authentication.principal.roles}"
+                 th:class="${#httpServletRequest.requestURI.endsWith(role.name.replaceFirst('ROLE_', '').toLowerCase())} ? 'nav-link active' : 'nav-link'"
+                 th:if="${role.name.startsWith('ROLE_')}"
+                 th:href="@{/{address}(address=${role.name.replaceFirst('ROLE_', '').toLowerCase()})}"
+                 th:text="${role.name.replaceFirst('ROLE_', '').toLowerCase()}">
+                  Role navigation
+              </a>
+          </div>
+      </nav>
+  </div>
+</body>
+</html>

@@ -10,7 +10,7 @@ import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
 
 import javax.annotation.PostConstruct;
-import java.util.Collections;
+import java.util.Set;
 
 @SpringBootApplication
 public class SpringBootSecurityDemoApplication {
@@ -38,8 +38,17 @@ public class SpringBootSecurityDemoApplication {
 				.name("admin")
 				.lastname("adminov")
 				.username("admin")
+				.age(18)
 				.password(passwordEncoder.encode("admin"))
-				.roles(Collections.singleton(admin)).build()
+				.roles(Set.of(admin, user)).build()
+		);
+		userDAO.save(User.builder()
+				.name("a")
+				.lastname("aLast")
+				.username("aName")
+				.age(20)
+				.password(passwordEncoder.encode("a"))
+				.roles(Set.of(admin, user)).build()
 		);
 	}
 }
