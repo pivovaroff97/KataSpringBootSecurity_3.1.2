@@ -19,55 +19,9 @@
             <th> Delete </th>
           </tr>
           </thead>
-          <tbody>
-          <tr th:each="us : ${users}">
-            <td><span th:text="${us.id}"> id </span></td>
-            <td><span th:text="${us.name}"> name </span></td>
-            <td><span th:text="${us.lastname}"> lastname </span></td>
-            <td><span th:text="${us.age}"> age </span></td>
-            <td><span th:text="${us.username}"> username </span></td>
-            <td>
-                <span class="roles" th:each="role: ${us.roles}" th:if="${role.name.startsWith('ROLE_')}"
-                      th:text="${role.name.replaceFirst('ROLE_', '')}">role name</span>
-            </td>
-            <td>
-              <button type="button" class="btn btn-info btn-edit" data-toggle="modal"
-                      data-target="#editUserModal" th:data-user-id="${us.id}"
-                      th:data-user-name="${us.name}" th:data-user-lastname="${us.lastname}"
-                      th:data-user-username="${us.username}" th:data-user-age="${us.age}" th:data-user-roles="${us.roles}">
-                Edit
-              </button>
-            </td>
-            <td>
-              <button type="button" class="btn btn-danger btn-delete" data-toggle="modal"
-                      data-target="#deleteUserModal" th:data-user-id="${us.id}"
-                      th:data-user-name="${us.name}" th:data-user-lastname="${us.lastname}"
-                      th:data-user-username="${us.username}" th:data-user-age="${us.age}" th:data-user-roles="${us.roles}">
-                Delete
-              </button>
-            </td>
-          </tr>
+          <tbody id="userTableBody">
           </tbody>
         </table>
-
-  <script>
-    $('.btn-edit').click(function () {
-        var $modal = $('#editUserModal')
-        var $btn = $(this);
-        $('#idE').val($btn.attr('data-user-id'));
-        $('#usernameE').val($btn.attr('data-user-username'));
-        $('#nameE').val($btn.attr('data-user-name'));
-        $('#lastnameE').val($btn.attr('data-user-lastname'));
-        $('#ageE').val($btn.attr('data-user-age'));
-        const userRoles = Array.from($btn.attr('data-user-roles').matchAll(/id=\d+/g)).map(x => x[0].replace('id=', ''));
-        var allRoles = $('#editUserModal select option').toArray();
-        for (const r of allRoles) {
-            if (userRoles.includes(r.id)) {
-                $('#' + r.id).attr('selected', true);
-            }
-        }
-    });
-  </script>
 
   <!-- Модальное окно edit user -->
   <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
@@ -94,37 +48,20 @@
                     <input class="form-control" type="text" th:field="*{username}" id="usernameE"/>
                     <label for="passwordE">Password</label>
                     <input class="form-control" type="text" th:field="*{password}" id="passwordE" disabled/>
-                    <label for="dropDownRoleList">Role</label>
-                    <select class="custom-select" multiple size="${#arrays.length(roles)}" id="dropDownRoleList" name="roleIds">
-                        <option th:id="${role.id}" th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                    <label for="rolesListE">Role</label>
+                    <select class="custom-select" multiple id="rolesListE" name="roleIds">
+<!--                        <option th:id="${role.id}" th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>-->
                     </select>
                 </form>
               </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-            <button type="submit" form="editForm" class="btn btn-info">Edit</button>
+            <button type="submit" id="editFormAction" form="editForm" class="btn btn-info">Edit</button>
           </div>
       </div>
     </div>
   </div>
-
-  <script>
-    $('.btn-delete').click(function () {
-        var $modal = $('#deleteUserModal')
-        var $btn = $(this);
-        $('#deleteForm').attr('action', '/admin/delete/' + $btn.attr('data-user-id'));
-        $('#idD').val($btn.attr('data-user-id'));
-        $('#usernameD').val($btn.attr('data-user-username'));
-        $('#nameD').val($btn.attr('data-user-name'));
-        $('#lastnameD').val($btn.attr('data-user-lastname'));
-        $('#ageD').val($btn.attr('data-user-age'));
-        var roles = $btn.attr('data-user-roles');
-        for (const r of roles) {
-          $("#" + r.name).attr('selected', true);
-        }
-    });
-  </script>
 
   <!-- Модальное окно delete user -->
   <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
@@ -149,16 +86,16 @@
                       <input type="text" id="ageD" disabled/>
                       <label for="usernameD">Email</label>
                       <input type="text" id="usernameD" disabled/>
-                      <label for="dropDownRoleListD">Role</label>
-                      <select class="custom-select" multiple size="${#arrays.length(roles)}" id="dropDownRoleListD" disabled>
-                        <option id="${role.name}" th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+                      <label for="rolesListD">Role</label>
+                      <select class="custom-select" multiple id="rolesListD" disabled>
+<!--                        <option id="${role.name}" th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>-->
                       </select>
                   </form>
               </div>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
-            <button type="submit" form="deleteForm" class="btn btn-danger">Delete</button>
+            <button type="submit" id="deleteFormAction" form="deleteForm" class="btn btn-danger">Delete</button>
           </div>
       </div>
     </div>

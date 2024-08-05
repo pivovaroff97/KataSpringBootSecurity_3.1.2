@@ -38,7 +38,7 @@ public class AdminUserController {
         if (roleIds == null) {
             user.setRoles(Collections.singleton(roleService.getRoleByName("ROLE_USER")));
         } else {
-            user.setRoles(new HashSet<>(roleService.getAllRoleByIds(roleIds)));
+            user.setRoles(new HashSet<>(roleService.getAllRoleByIds(new HashSet<>(roleIds))));
         }
         if (user.getId() != null) {
             userService.updateUser(user);

@@ -6,18 +6,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.dao.UserDAO;
 import ru.kata.spring.boot_security.demo.model.User;
+import ru.kata.spring.boot_security.demo.model.UserForm;
 
+import java.util.HashSet;
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;
+    private final RoleService roleService;
 	private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserDAO userDAO, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -32,6 +36,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public boolean existById(Long id) {
+        return userDAO.existsById(id);
+    }
+
+    @Override
     @Transactional
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -42,6 +51,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateUser(User user) {
         User us = userDAO.findById(user.getId()).orElseThrow();
+        us.setUsername(user.getUsername());
         us.setName(user.getName());
         us.setLastname(user.getLastname());
         us.setAge(user.getAge());
@@ -53,5 +63,17 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void deleteUserById(Long id) {
         userDAO.deleteById(id);
+    }
+
+    @Override
+    public User createUser(UserForm userForm) {
+        return User.builder()
+                .username(userForm.getUsername())
+                .name(userForm.getName())
+                .lastname(userForm.getLastname())
+                .age(userForm.getAge())
+                .password(userForm.getPassword())
+                .roles(new HashSet<>(roleService.getAllRoleByIds(userForm.getRoleIds())))
+                .build();
     }
 }
