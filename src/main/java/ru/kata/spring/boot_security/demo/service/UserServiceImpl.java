@@ -13,11 +13,13 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserDAO userDAO;
+    private final RoleService roleService;
 	private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserDAO userDAO, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(UserDAO userDAO, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userDAO = userDAO;
+        this.roleService = roleService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -32,6 +34,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByUsername(String username) {
+        return userDAO.findByUsername(username).orElseThrow();
+    }
+
+    @Override
+    public boolean existById(Long id) {
+        return userDAO.existsById(id);
+    }
+
+    @Override
     @Transactional
     public User saveUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -42,9 +54,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public User updateUser(User user) {
         User us = userDAO.findById(user.getId()).orElseThrow();
+        us.setUsername(user.getUsername());
         us.setName(user.getName());
         us.setLastname(user.getLastname());
-        us.setUsername(user.getUsername());
+        us.setAge(user.getAge());
+        us.setRoles(user.getRoles());
         return us;
     }
 

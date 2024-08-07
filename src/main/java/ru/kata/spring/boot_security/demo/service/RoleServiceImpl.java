@@ -22,7 +22,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> getAllRoleByIds(List<Long> ids) {
+    public List<Role> getAllRoleByIds(Iterable<Long> ids) {
         return roleDAO.findAllById(ids);
     }
 
@@ -37,9 +37,22 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
+    public boolean existsById(Long id) {
+        return roleDAO.existsById(id);
+    }
+
+    @Override
     @Transactional
     public Role saveRole(Role role) {
         return roleDAO.save(role);
+    }
+
+    @Override
+    @Transactional
+    public Role updateRole(Role role) {
+        Role updatedRole = roleDAO.findById(role.getId()).orElseThrow();
+        updatedRole.setName(role.getName());
+        return updatedRole;
     }
 
     @Override

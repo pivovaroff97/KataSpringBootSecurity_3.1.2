@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div th:fragment="content" class="col bg-white border border-top-0 rounded-bottom p-3">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th> ID </th>
+            <th> First Name </th>
+            <th> Last Name </th>
+            <th> Age </th>
+            <th> Email </th>
+            <th> Role </th>
+            <th> Edit </th>
+            <th> Delete </th>
+          </tr>
+          </thead>
+          <tbody id="allUsersTable">
+          </tbody>
+        </table>
+
+  <!-- Модальное окно edit user -->
+  <div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="editModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="editModal">Edit user</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="col-6 mx-auto text-center">
+                <form id="editForm" method="POST">
+                    <label for="idE">ID</label>
+                    <input class="form-control" type="text" id="idE" readonly>
+                    <label for="nameE">First name</label>
+                    <input class="form-control" type="text" id="nameE"/>
+                    <label for="lastnameE">Last name</label>
+                    <input class="form-control" type="text" id="lastnameE"/>
+                    <label for="ageE">Age</label>
+                    <input class="form-control" type="text" id="ageE"/>
+                    <label for="usernameE">Email</label>
+                    <input class="form-control" type="text" id="usernameE"/>
+                    <label for="passwordE">Password</label>
+                    <input class="form-control" type="text" id="passwordE" disabled/>
+                    <label for="rolesListE">Role</label>
+                    <select class="custom-select" multiple id="rolesListE" name="roleIds">
+                    </select>
+                </form>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            <button type="submit" id="editFormAction" form="editForm" class="btn btn-info">Edit</button>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно delete user -->
+  <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteModal" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="deleteModal">Delete user</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+              <div class="col-6 mx-auto text-center">
+                  <form id="deleteForm" th:method="POST">
+                      <label for="idD">ID</label>
+                      <input type="text" id="idD" disabled>
+                      <label for="nameD">First name</label>
+                      <input type="text" id="nameD" disabled/>
+                      <label for="lastnameD">Last name</label>
+                      <input type="text" id="lastnameD" disabled/>
+                      <label for="ageD">Age</label>
+                      <input type="text" id="ageD" disabled/>
+                      <label for="usernameD">Email</label>
+                      <input type="text" id="usernameD" disabled/>
+                      <label for="rolesListD">Role</label>
+                      <select class="custom-select" multiple id="rolesListD" disabled>
+<!--                        <option id="${role.name}" th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>-->
+                      </select>
+                  </form>
+              </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            <button type="submit" id="deleteFormAction" form="deleteForm" class="btn btn-danger">Delete</button>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
