@@ -19,7 +19,7 @@
             <th> Delete </th>
           </tr>
           </thead>
-          <tbody id="userTableBody">
+          <tbody id="allUsersTable">
           </tbody>
         </table>
 
@@ -35,22 +35,21 @@
           </div>
           <div class="modal-body">
               <div class="col-6 mx-auto text-center">
-                <form id="editForm" th:method="POST" th:action="@{/admin}" th:object="${user}">
+                <form id="editForm" method="POST">
                     <label for="idE">ID</label>
-                    <input class="form-control" type="text" th:field="*{id}" id="idE" readonly>
+                    <input class="form-control" type="text" id="idE" readonly>
                     <label for="nameE">First name</label>
-                    <input class="form-control" type="text" th:field="*{name}" id="nameE"/>
+                    <input class="form-control" type="text" id="nameE"/>
                     <label for="lastnameE">Last name</label>
-                    <input class="form-control" type="text" th:field="*{lastname}" id="lastnameE"/>
+                    <input class="form-control" type="text" id="lastnameE"/>
                     <label for="ageE">Age</label>
-                    <input class="form-control" type="text" th:field="*{age}" id="ageE"/>
+                    <input class="form-control" type="text" id="ageE"/>
                     <label for="usernameE">Email</label>
-                    <input class="form-control" type="text" th:field="*{username}" id="usernameE"/>
+                    <input class="form-control" type="text" id="usernameE"/>
                     <label for="passwordE">Password</label>
-                    <input class="form-control" type="text" th:field="*{password}" id="passwordE" disabled/>
+                    <input class="form-control" type="text" id="passwordE" disabled/>
                     <label for="rolesListE">Role</label>
                     <select class="custom-select" multiple id="rolesListE" name="roleIds">
-<!--                        <option th:id="${role.id}" th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>-->
                     </select>
                 </form>
               </div>

@@ -3,60 +3,68 @@ package ru.kata.spring.boot_security.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
-import ru.kata.spring.boot_security.demo.model.UserForm;
+import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
 import java.net.URI;
 import java.util.List;
 
 @RestController
-@RequestMapping("/admin/users")
-public class RestUserController {
+@RequestMapping("/api/admin")
+public class AdminRestController {
 
     private final UserService userService;
+    private final RoleService roleService;
 
     @Autowired
-    public RestUserController(UserService userService) {
+    public AdminRestController(UserService userService, RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<List<User>> getUsers() {
         return ResponseEntity
                 .ok()
                 .body(userService.getUsers());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/roles")
+    public ResponseEntity<List<Role>> getRoles() {
+        return ResponseEntity
+                .ok()
+                .body(roleService.getRoles());
+    }
+
+    @GetMapping("/users/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
         return ResponseEntity
                 .ok()
                 .body(userService.getUserById(id));
     }
 
-    @PostMapping
-    public ResponseEntity<User> saveUser(@RequestBody UserForm userForm) {
-        User user = userService.createUser(userForm);
+    @PostMapping("/users")
+    public ResponseEntity<User> saveUser(@RequestBody User user) {
         userService.saveUser(user);
         return ResponseEntity
                 .created(URI.create("/users/" + user.getId()))
                 .body(user);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<User> upsertUser(@PathVariable Long id, @RequestBody UserForm userForm) {
+    @PutMapping("/users/{id}")
+    public ResponseEntity<User> upsertUser(@PathVariable Long id, @RequestBody User user) {
+        System.out.println(user);
         if (userService.existById(id)) {
-            User user = userService.createUser(userForm);
-            user.setId(id);
             return ResponseEntity
                     .ok()
                     .body(userService.updateUser(user));
         }
-        return saveUser(userForm);
+        return saveUser(user);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/users/{id}")
     public void deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
     }

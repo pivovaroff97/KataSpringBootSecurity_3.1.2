@@ -5,10 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-<div th:fragment="content">
-    <span th:text="${#authentication.principal.username + ' with roles: '}">username</span>
-    <span class="roles" th:each="role: ${#authentication.principal.roles}" th:if="${role.name.startsWith('ROLE_')}"
-          th:text="${role.name.replaceFirst('ROLE_', '')}">user roles</span>
+<div th:fragment="content" id="headerInfo">
 </div>
 </body>
 </html>

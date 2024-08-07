@@ -6,32 +6,30 @@
 </head>
 <body>
 <div th:fragment="content" class="col-4 mx-auto text-center py-3">
-  <form id="newUserForm" th:method="POST" th:action="@{/admin/users}" th:object="${user}">
+  <form id="newUserForm" method="POST">
     <div class="form-group">
       <label for="name">First name</label>
-      <input type="text" class="form-control" th:field="*{name}" id="name"/>
+      <input type="text" class="form-control" id="name"/>
     </div>
     <div class="form-group">
       <label for="lastname">Last name</label>
-      <input type="text" class="form-control" th:field="*{lastname}" id="lastname"/>
+      <input type="text" class="form-control" id="lastname"/>
     </div>
     <div class="form-group">
       <label for="age">Age</label>
-      <input type="text" class="form-control" th:field="*{age}" id="age"/>
+      <input type="text" class="form-control" id="age"/>
     </div>
     <div class="form-group">
       <label for="username">Email</label>
-      <input type="email" class="form-control" th:field="*{username}" id="username"/>
+      <input type="email" class="form-control" id="username"/>
     </div>
     <div class="form-group">
       <label for="password">Password</label>
-      <input type="password" class="form-control" th:field="*{password}" id="password"/>
+      <input type="password" class="form-control" id="password"/>
     </div>
     <div class="form-group">
       <label for="rolesList">Role</label>
       <select class="custom-select" multiple id="rolesList" name="roleIds">
-<!--        <option th:each="role : ${roles}" th:value="${role.id}" th:if="${role.name.startsWith('ROLE_')}"-->
-<!--                th:text="${role.name.replaceFirst('ROLE_', '')}"></option>-->
       </select>
     </div>
     <button id="saveUserButton" type="submit" class="btn btn-lg btn-success">Add new user</button>
